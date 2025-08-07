@@ -42,4 +42,42 @@ class UserController extends Controller
 
         }
     }
+
+    //Delete user
+    public function destroy(Request $request)
+    {
+        try {
+            $id = $request->query('id');
+
+            $user = UserModel::findOrFail($id);
+            $user->delete();
+            
+            return response()->json(['message' => 'Usuário deletado com sucesso'], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Falha ao deletar o usuário'], 500);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        
+        try{
+
+            $id = $request->query('id');
+            $user = UserModel::find($id);
+
+            if (!$user) {
+                return response()->json(['error' => 'Usuário não encontrado'], 404);
+            }
+
+            $user->update($request->all());
+
+            return response()->json(['message' => 'Usuário atualizado com sucesso'], 200);
+
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return response()->json(['error' => 'Falha ao atualizar o usuário'], 500);
+        }
+    }
 }
